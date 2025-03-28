@@ -91,7 +91,6 @@ namespace Fujin.UI
         /// Make sure to assign pos when the value is true
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="spriteType"></param>
         /// <param name="pos"></param>
         public void SetTargetTracking(bool value, Vector2? pos = null)
         {
@@ -101,7 +100,7 @@ namespace Fujin.UI
             {
                 if (targetCanvas == null)
                 {
-                    FindTargetCanvas();
+                    return;
                 }
                 targetRect.anchoredPosition = pos ?? new Vector2(targetCanvas.sizeDelta.x / 2f, targetCanvas.sizeDelta.y / 2f);
             }
@@ -113,7 +112,6 @@ namespace Fujin.UI
 
             if (targetHolder == null)
             {
-                Debug.LogError("No target holder is present in the scene.");
                 return;
             }
             
@@ -150,7 +148,7 @@ namespace Fujin.UI
             if (_instance == null)
             {
                 _instance = this;
-                DontDestroyOnLoad(this);
+                DontDestroyOnLoad(gameObject);
                 ApplyTransparentTexture();
             }
             else
@@ -162,11 +160,6 @@ namespace Fujin.UI
         private void ApplyTransparentTexture()
         {
             Cursor.visible = false;
-            // Texture2D transparentTexture = new Texture2D(1, 1);
-            // transparentTexture.SetPixel(0, 0, new Color(0, 0, 0, 0));
-            // transparentTexture.Apply();
-            //
-            // Cursor.SetCursor(transparentTexture, Vector2.zero, CursorMode.Auto);
         }
 
         [SerializeField] private GameObject proxyPrefab;
@@ -176,7 +169,7 @@ namespace Fujin.UI
         private void UpdateCursorCanvas()
         {
             // Re-register itself
-            mSceneLoadManager.AddFunctionOnSceneLoad(UpdateCursorCanvas);
+            _ = mSceneLoadManager.AddFunctionOnSceneLoad(UpdateCursorCanvas);
 
             if (proxyRect == null)
             {
@@ -195,6 +188,10 @@ namespace Fujin.UI
                 targetRect = cursorObj.GetComponent<RectTransform>();
                 DontDestroyOnLoad(cursorObj);
             }
+            
+            Debug.Log($"targetRect.anchoredPosition: {targetRect.anchoredPosition}");
+            
+            FindTargetCanvas();
         }
 
         private void Start()
