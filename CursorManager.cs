@@ -29,7 +29,7 @@ namespace Fujin.UI
         [SerializeField] private Sprite defaultCursor;
         
         // For target
-        private readonly Vector2 targetSpeed = new Vector2(4f, 2.5f);
+        private readonly Vector2 targetSpeed = new Vector2(80f, 50f);
         private float targetMsMultiplier = 1f;
         private bool shouldTrackCursor;
 
@@ -38,7 +38,7 @@ namespace Fujin.UI
             // Update target pos
             if (shouldTrackCursor)
             {
-                targetRect.anchoredPosition += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * targetSpeed * targetMsMultiplier;
+                targetRect.anchoredPosition += new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * targetSpeed * (targetMsMultiplier * Time.deltaTime);
             }
 
             // Adjust proxy pos
@@ -112,10 +112,13 @@ namespace Fujin.UI
 
             if (targetHolder == null)
             {
+                Debug.Log("targetHolder was not found!");
                 return;
             }
             
             targetRect.transform.SetParent(targetHolder.transform); 
+            targetRect.transform.localPosition = Vector3.zero;
+            targetRect.transform.localScale = Vector3.one;
             targetCanvas = targetHolder.GetComponent<RectTransform>();
         }
 
@@ -188,8 +191,6 @@ namespace Fujin.UI
                 targetRect = cursorObj.GetComponent<RectTransform>();
                 DontDestroyOnLoad(cursorObj);
             }
-            
-            Debug.Log($"targetRect.anchoredPosition: {targetRect.anchoredPosition}");
             
             FindTargetCanvas();
         }
