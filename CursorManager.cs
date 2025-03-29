@@ -189,6 +189,7 @@ namespace Fujin.UI
             {
                 GameObject cursorObj = Instantiate(targetPrefab);
                 targetRect = cursorObj.GetComponent<RectTransform>();
+                SetTargetTracking(false);
                 DontDestroyOnLoad(cursorObj);
             }
             
